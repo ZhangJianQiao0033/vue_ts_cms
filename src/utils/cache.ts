@@ -11,8 +11,8 @@ class Cache {
   }
 
   setCache(key: string, value: any) {
-    if (value) {
-      this.storage.setItem(key, JSON.stringify(value))
+    if (typeof value !== 'undefined' && value !== null) {
+      this.storage.setItem(key, JSON.stringify(value));
     }
   }
 

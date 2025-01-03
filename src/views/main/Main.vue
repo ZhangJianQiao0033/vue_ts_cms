@@ -1,25 +1,58 @@
 <template>
   <div class="main">
-    <h2>main</h2>
-    <button @click="loginOutClick">退出登录</button>
+    <el-container class="content-container">
+      <el-aside :width="isFold ?' 60px' : '210px'">
+        <MainMenu :isCollapse="isFold"/>
+      </el-aside>
+      <el-container>
+        <el-header>
+          <MainHeader @fold-change="handleFoldChange"/>
+        </el-header>
+        <el-main>
+          <RouterView />
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script setup lang="ts">
-import { LOGIN_TOKEN } from '@/global/constans';
-import router from '@/router';
-import { localCache } from '@/utils/cache';
+import MainHeader from '@/components/main-header/MainHeader.vue'
+import MainMenu from '@/components/main-menu/MainMenu.vue'
+import { ref } from 'vue';
 
-function loginOutClick() {
-  localCache.removeCache(LOGIN_TOKEN)
-  router.push('/login')
+const isFold = ref(false)
+
+function handleFoldChange(flag: boolean) {
+  isFold.value = flag
 }
-
-
 </script>
 
 <style scoped lang="less">
 .main {
+  height: 100%;
 
+  .content-container {
+    height: 100%;
+
+    .el-aside {
+      overflow: auto;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE 和 Edge */
+
+      &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+      }
+
+      transition: width 0.3s ease;
+    }
+    .el-main {
+      background-color: #f0f2f5;
+    }
+  }
+
+  .el-header {
+    --el-header-height: 50px;
+  }
 }
 </style>

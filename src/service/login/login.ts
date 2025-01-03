@@ -6,3 +6,19 @@ export function accountLoginRequest(account: IAccount) {
     data: account
   })
 }
+
+
+export function getUserInfoRequest(id: number) {
+  return hyRequest.get({
+    url: `/users/${id}`,
+
+  })
+}
+
+
+export function getMenuInfoRequest(id: number) {
+  return hyRequest.get({
+    url: `/role/${id}/menu`,
+
+  })
+}

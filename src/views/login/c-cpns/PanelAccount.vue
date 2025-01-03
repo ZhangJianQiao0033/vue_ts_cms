@@ -23,10 +23,11 @@ import type { FormRules, ElForm } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import type { IAccount } from '@/types'
 import useLoginStore from '@/store/login/login'
+import { localCache } from '@/utils/cache'
 // 1.绑定用户名和密码的值
 const account = reactive<IAccount>({
-  name: '',
-  password: ''
+  name: localCache.getCache("name") ?? '',
+  password: localCache.getCache("password") ?? ''
 })
 
 // 2. 定义账号密码验证规则
@@ -52,16 +53,27 @@ const accoutRules: FormRules = {
 // 3 点击登录的操作
 const elfromRef = ref<InstanceType<typeof ElForm>>()
 const loginStore = useLoginStore()
-function loginAction() {
+function loginAction(isRememberPassword: boolean) {
+  
   elfromRef.value?.validate((valid) => {
     if (valid) {
       const name = account.name
       const password = account.password
-      loginStore.loginAccountAction({name, password})
+      loginStore.loginAccountAction({name, password}).then(() => {
+        if(isRememberPassword) {
+          localCache.setCache("name", name)
+          localCache.setCache("password", password)
+        } else {
+          localCache.removeCache("name")
+          localCache.removeCache("password")
+        }
+
+      })
 
 
     } else {
-      console.log("no");
+
+
       ElMessage.error('Oops, 账号或密码不正确')
     }
   })

@@ -7,7 +7,7 @@
           <template #label>
             <div class="label">
               <el-icon><UserFilled /></el-icon>
-              <span class="text">账号密码</span>
+              <span class="text">帐号登录</span>
             </div>
           </template>
           <PanelAccount ref="panelAccountRef"/>
@@ -19,7 +19,7 @@
               <span class="text">手机登录</span>
             </div>
           </template>
-          321
+          <PanelPhone />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -34,11 +34,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
+import { ref, watch } from 'vue'
+import PanelPhone from './PanelPhone.vue'
 import PanelAccount from './PanelAccount.vue'
+import { localCache } from '@/utils/cache'
 
-const isRememberPassword = ref(false)
+const isRememberPassword = ref<boolean>(localCache.getCache("isRememberPassword") ?? false)
+watch(isRememberPassword, (newValue) => {
+  localCache.setCache('isRememberPassword', newValue)
+})
+
+
 const activeName = ref('account')
 
 // 调用子组件的方法得到帐户密码
@@ -46,7 +52,7 @@ const panelAccountRef = ref<InstanceType<typeof PanelAccount>>()
 
 function loginClick() {
   if(activeName.value === 'account') {
-    panelAccountRef.value?.loginAction()
+    panelAccountRef.value?.loginAction(isRememberPassword.value)
   } else {
     console.log("手机验证码登录");
   }
@@ -68,6 +74,7 @@ function loginClick() {
   .control {
     display: flex;
     justify-content: space-between;
+    margin-top: 12px;
   }
 
   .login-btn {
