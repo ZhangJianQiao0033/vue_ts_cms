@@ -3,6 +3,7 @@ import type { IAccount } from "@/types";
 
 import { accountLoginRequest } from "@/service/login/login";
 import { localCache } from "@/utils/cache";
+import router from "@/router";
 const LOGIN_TOKEN = 'token'
 const useLoginStore = defineStore("login",{
   state: () => ({
@@ -18,6 +19,9 @@ const useLoginStore = defineStore("login",{
       this.name = loginResult.name
       this.token = loginResult.token
       localCache.setCache(LOGIN_TOKEN, this.token)
+
+      // 页面跳转
+      router.push('/main')
     }
   }
 })

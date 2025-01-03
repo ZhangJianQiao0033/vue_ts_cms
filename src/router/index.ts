@@ -1,21 +1,22 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { LOGIN_TOKEN } from '@/global/constans'
+import { localCache } from '@/utils/cache'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: "/",
-      redirect: "../views/main/main.vue"
+      path: '/',
+      redirect: '/main'
     },
     {
-      path: "/main",
+      path: '/main',
       component: () => import('@/views/main/Main.vue')
     },
     {
-      path: "/login",
+      path: '/login',
       component: () => import('@/views/login/Login.vue')
     },
-
 
     {
       path: '/:pathMatch(.*)',
@@ -23,5 +24,10 @@ const router = createRouter({
     }
   ]
 })
-
+router.beforeEach((to, from) => {
+  const token = localCache.getCache(LOGIN_TOKEN)
+  if(to.path === '/main' && !token) {
+    return '/login'
+  }
+})
 export default router
