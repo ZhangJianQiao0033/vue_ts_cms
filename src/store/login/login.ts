@@ -1,27 +1,30 @@
-import { defineStore } from "pinia";
-import type { IAccount } from "@/types";
+import { defineStore } from 'pinia'
+import type { IAccount } from '@/types'
 
-import { accountLoginRequest, getMenuInfoRequest, getUserInfoRequest } from "@/service/login/login";
-import { localCache } from "@/utils/cache";
-import router from "@/router";
+import {
+  accountLoginRequest,
+  getMenuInfoRequest,
+  getUserInfoRequest
+} from '@/service/login/login'
+import { localCache } from '@/utils/cache'
+import router from '@/router'
+import { mapMenuToRoute } from '@/utils/map-menus'
+
+
 const LOGIN_TOKEN = 'token'
-interface ILoginState  {
+interface ILoginState {
   token: string
   useInfo: any
   menuInfo: any
-  
 }
-const useLoginStore = defineStore("login",{
+const useLoginStore = defineStore('login', {
   state: (): ILoginState => ({
-
-
-    token: localCache.getCache(LOGIN_TOKEN) ?? '',
-    useInfo: localCache.getCache("useInfo"),
-    menuInfo: localCache.getCache("menuInfo")
+    token:  '',
+    useInfo: {},
+    menuInfo: []
   }),
   actions: {
-    async  loginAccountAction(account: IAccount ) {
-
+    async loginAccountAction(account: IAccount) {
       const loginResult = await accountLoginRequest(account)
       const id = loginResult.id
       this.token = loginResult.token
@@ -29,12 +32,34 @@ const useLoginStore = defineStore("login",{
       this.useInfo = await getUserInfoRequest(id)
       this.menuInfo = await getMenuInfoRequest(this.useInfo.role.id)
 
-      localCache.setCache("useInfo", this.useInfo)
-      localCache.setCache("menuInfo", this.menuInfo)
+      localCache.setCache('useInfo', this.useInfo)
+      localCache.setCache('menuInfo', this.menuInfo)
+
+      // 动态添加路由
+
+      const routes = mapMenuToRoute(this.menuInfo)
+
+      routes.forEach((route) => router.addRoute('main', route))
+
       // 页面跳转
       router.push('/main')
+    },
+    loadLocalCacheAction() {
+      const token = localCache.getCache(LOGIN_TOKEN)
+      const useInfo = localCache.getCache('useInfo')
+      const menuInfo = localCache.getCache('menuInfo')
+
+      if(token && useInfo && menuInfo) {
+        this.token = token
+        this.useInfo = useInfo
+        this.menuInfo = menuInfo
+        const routes = mapMenuToRoute(this.menuInfo)
+        routes.forEach((route) => router.addRoute('main', route))
+      }
     }
-  }
+  },
+
+
 })
 
 export default useLoginStore

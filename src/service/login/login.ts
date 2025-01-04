@@ -20,5 +20,6 @@ export function getMenuInfoRequest(id: number) {
   return hyRequest.get({
     url: `/role/${id}/menu`,
 
+    
   })
 }

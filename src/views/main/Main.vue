@@ -1,15 +1,17 @@
 <template>
   <div class="main">
     <el-container class="content-container">
-      <el-aside :width="isFold ?' 60px' : '210px'">
-        <MainMenu :isCollapse="isFold"/>
+      <el-aside :width="isFold ? ' 60px' : '210px'">
+        <MainMenu :isCollapse="isFold" />
       </el-aside>
       <el-container>
         <el-header>
-          <MainHeader @fold-change="handleFoldChange"/>
+          <MainHeader @fold-change="handleFoldChange" />
         </el-header>
         <el-main>
-          <RouterView />
+          <el-config-provider :locale="zhCn">
+            <RouterView />
+          </el-config-provider>
         </el-main>
       </el-container>
     </el-container>
@@ -19,7 +21,9 @@
 <script setup lang="ts">
 import MainHeader from '@/components/main-header/MainHeader.vue'
 import MainMenu from '@/components/main-menu/MainMenu.vue'
-import { ref } from 'vue';
+import { ElConfigProvider } from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import { ref } from 'vue'
 
 const isFold = ref(false)
 
