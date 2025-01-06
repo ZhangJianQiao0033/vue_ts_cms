@@ -31,3 +31,33 @@ export function updateUserData(id: number, userInfo: any) {
 }
 
 
+export function postPageListData(path: string, queryInfo: any) {
+  return hyRequest.post({
+    url: `/${path}/list`,
+    data: queryInfo
+  })
+}
+
+export function deletePageData(path: string, id: number) {
+
+  return hyRequest.delete({
+    url: `/${path}/${id}`
+  })
+}
+
+export function newPageData(path: string, userInfo: any) {
+
+  return hyRequest.post({
+    url: `/${path}`,
+    data: userInfo
+  })
+}
+
+export function updatePageData(path: string, id: number, userInfo: any) {
+
+  return hyRequest.patch({
+    url: `/${path}/${id}`,
+    data: userInfo
+  })
+}
+

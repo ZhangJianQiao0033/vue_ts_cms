@@ -17,3 +17,11 @@ export function convertUtcToBeijingTime(utcTimeString: string, format: string = 
 
   return formattedTime;
 }
+export function normalizeSearchForm(form: any) {
+  for (const key in form) {
+    if (form[key] == null) {
+      form[key] = '';
+    }
+  }
+  return form;
+}

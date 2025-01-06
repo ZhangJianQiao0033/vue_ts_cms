@@ -1,12 +1,12 @@
 <template>
   <div class="user-modal">
-    <el-dialog v-model="dialogVisible" title="新建用户" width="500" center>
+    <el-dialog v-model="dialogVisible" :title="isNewRef ? '新建用户' : '编辑用户'" width="500" center>
       <div class="form">
         <el-form :model="formData">
           <el-form-item label="用户名" prop="name" label-width="80" size="large">
             <el-input placeholder="请输入用户名" v-model="formData.name" />
           </el-form-item>
-          <el-form-item label="真实姓名" prop="realname" label-width="80" size="large">
+          <el-form-item label="部门领导" prop="realname" label-width="80" size="large">
             <el-input placeholder="请输入真实姓名" v-model="formData.realname" />
           </el-form-item>
           <el-form-item label="密码" prop="password" label-width="80" size="large" v-if="isNewRef">
@@ -50,7 +50,7 @@ import { reactive, ref } from 'vue'
 
 const formData = reactive<any>({
   name: '',
-  realname: '',
+  leader: '',
   password: '',
   cellphone: '',
   roleId: '',
@@ -81,7 +81,7 @@ function setModalVisible(isNew: boolean = true, userInfo: any) {
       }
     }
     editData.value = userInfo
-    console.log("editData",editData.value);
+
   }
 }
 
