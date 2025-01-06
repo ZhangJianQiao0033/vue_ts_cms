@@ -56,14 +56,17 @@ const searchForm = reactive({
   realname: '',
   cellphone: '',
   enable: 1,
-  createAt: []
+  createAt: ''
 })
+const emit = defineEmits(['refreshClick', 'searchClick'])
 function refreshClick() {
   form.value?.resetFields()
+  emit('refreshClick')
 }
 
 function searchClick() {
-  console.log("searchClick");
+
+  emit('searchClick', searchForm)
 }
 
 </script>

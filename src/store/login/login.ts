@@ -9,6 +9,7 @@ import {
 import { localCache } from '@/utils/cache'
 import router from '@/router'
 import { mapMenuToRoute } from '@/utils/map-menus'
+import useMainStore from '../main/main'
 
 
 const LOGIN_TOKEN = 'token'
@@ -35,10 +36,13 @@ const useLoginStore = defineStore('login', {
       localCache.setCache('useInfo', this.useInfo)
       localCache.setCache('menuInfo', this.menuInfo)
 
+      //请求role和department数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDataAction()
+
+
       // 动态添加路由
-
       const routes = mapMenuToRoute(this.menuInfo)
-
       routes.forEach((route) => router.addRoute('main', route))
 
       // 页面跳转
@@ -53,6 +57,10 @@ const useLoginStore = defineStore('login', {
         this.token = token
         this.useInfo = useInfo
         this.menuInfo = menuInfo
+
+        const mainStore = useMainStore()
+        mainStore.fetchEntireDataAction()
+
         const routes = mapMenuToRoute(this.menuInfo)
         routes.forEach((route) => router.addRoute('main', route))
       }
